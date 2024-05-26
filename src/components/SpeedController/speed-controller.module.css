@@ -1,0 +1,5 @@
+.markWrapper {
+	& [data-filled] + div {
+		color: orange;
+	}
+}

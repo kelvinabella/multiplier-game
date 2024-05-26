@@ -1,0 +1,14 @@
+.root {
+	line-height: 1;
+}
+
+.input {
+	color: #fff;
+	font-weight: 500;
+	font-size: 14px;
+	text-align: center;
+}
+
+.label {
+	font-size: 10px;
+}
