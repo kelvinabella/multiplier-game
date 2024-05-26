@@ -8,7 +8,7 @@ export interface Player {
 
 interface ContextType {
 	player: Player;
-	speedController: number;
+	speedController:  MutableRefObject<number>;
 	multiplierValue: MutableRefObject<number>;
 	isLoggedIn: boolean;
 	gameStarted: boolean;
@@ -19,7 +19,6 @@ interface ContextType {
 	setGameStarted: Dispatch<SetStateAction<boolean>>;
 	setGameEnded: Dispatch<SetStateAction<boolean>>;
 	setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
-	setSpeedController: Dispatch<SetStateAction<number>>;
 	setPlayersData: Dispatch<SetStateAction<Array<Player>>>;
 }
 
@@ -30,7 +29,7 @@ export function GameProvider({ children }: Readonly<{ children: React.ReactNode 
 	const [gameStarted, setGameStarted] = useState<boolean>(false);
 	const [gameEnded, setGameEnded] = useState<boolean>(false);
 	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-	const [speedController, setSpeedController] = useState(0);
+	const speedController = useRef(0);
 	const multiplierValue = useRef<number>(1);
 	const [playersData, setPlayersData] = useState<Array<Player>>([]);
 	const [currentRoundWinnings, setCurrentRoundWinnings] = useState<Array<Player>>([]);
@@ -64,7 +63,6 @@ export function GameProvider({ children }: Readonly<{ children: React.ReactNode 
 			setGameStarted,
 			setGameEnded,
 			setPlayersData,
-			setSpeedController,
 		}),
 		[player, speedController, multiplierValue, gameStarted, gameEnded, isLoggedIn, playersData, currentRoundWinnings]
 	);

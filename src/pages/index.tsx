@@ -11,10 +11,10 @@ import { useGameContext } from "@/context";
 import io, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { useLocalStorage } from "@mantine/hooks";
-import Chart, { ChartPlacholder } from "@/components/Chart";
+import Chart from "@/components/Chart";
 
 export default function Index() {
-	const { isLoggedIn, gameStarted,multiplierValue, player, setGameStarted, setGameEnded, setPlayersData } = useGameContext();
+	const { isLoggedIn, gameStarted, multiplierValue, player, setGameStarted, setGameEnded, setPlayersData } = useGameContext();
 
 	let socket = useRef<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
 
@@ -78,7 +78,7 @@ export default function Index() {
 									gameStarted
 										? undefined
 										: async () => {
-											multiplierValue.current = 0
+												multiplierValue.current = 0;
 												setGameStarted(true);
 												setGameEnded(false);
 												setSocketListeners();
@@ -108,7 +108,9 @@ export default function Index() {
 								<Stats label={isLoggedIn ? "21:30" : ""} icon="/clock.png" />
 							</SimpleGrid>
 						</Grid.Col>
-						<Grid.Col pos="relative">{gameStarted ? <Chart /> : <ChartPlacholder />}</Grid.Col>
+						<Grid.Col pos="relative">
+							<Chart />
+						</Grid.Col>
 					</Grid>
 				</Grid.Col>
 				<Grid.Col span={{ base: 12, md: 6, lg: 6 }}>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Paper, Group, Text, Stack, Slider } from "@mantine/core";
 import Image from "next/image";
 import { useGameContext } from "@/context";
@@ -6,7 +6,13 @@ import { useGameContext } from "@/context";
 import classes from "./speed-controller.module.css";
 
 export default function SpeedController() {
-	const { gameStarted, speedController, setSpeedController } = useGameContext();
+	const { gameStarted, speedController } = useGameContext();
+	const [value, setValue] = useState(0);
+
+	useEffect(() => {
+		speedController.current = value;
+	}, [speedController, value])
+	
 	return (
 		<Stack gap="xs">
 			<Group wrap="nowrap">
@@ -19,8 +25,8 @@ export default function SpeedController() {
 				<Slider
 					disabled={gameStarted}
 					classNames={classes}
-					value={speedController}
-					onChange={setSpeedController}
+					value={value}
+					onChange={setValue}
 					color="orange"
 					label={null}
 					thumbSize={17}
