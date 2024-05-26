@@ -8,7 +8,7 @@ import CurrentRoundStats from "@/components/CurrentRoundStats";
 import SpeedController from "@/components/SpeedController";
 import Welcome from "@/components/Welcome";
 import { useGameContext } from "@/context";
-import io, { Socket } from "Socket.IO-client";
+import io, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import GameBoard from "@/components/GameBoard";
 
