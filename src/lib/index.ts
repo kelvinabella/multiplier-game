@@ -3,7 +3,7 @@ import { Player } from "@/context";
 export const randomPlayerMultiplier = (min: number, max: number) => Array.from({ length: 4 }, () => (Math.random() * (max - min) + min).toFixed(2));
 
 export const randomFreeze = (func: () => void, end: number) => {
-	let min = 2,
+	let min = 3,
 		max = 10 - end / 10;
 	let rand = Math.floor(Math.random() * (max - min + 1) + min);
 	setTimeout(func, rand * 1000);

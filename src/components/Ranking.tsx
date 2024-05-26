@@ -1,7 +1,8 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { Paper, Group, Table, Text, Stack } from "@mantine/core";
 import Image from "next/image";
 import { useGameContext } from "@/context";
+import { useLocalStorage } from "@mantine/hooks";
 
 const DEFAULT_ELEMENTS = [
 	{ name: "-", score: "-" },
@@ -11,10 +12,39 @@ const DEFAULT_ELEMENTS = [
 	{ name: "-", score: "-" },
 ];
 
-function Ranking() {
-	const { isLoggedIn, playersRanking } = useGameContext();
+export interface RankingType {
+	name: string;
+	score: number;
+}
 
+function Ranking() {
+	const { isLoggedIn, gameEnded, currentRoundWinnings } = useGameContext();
+	const [playersRanking, setPlayersRanking] = useLocalStorage<Array<RankingType>>({
+		key: "players-ranking",
+		defaultValue: [],
+	});
 	const tableData = isLoggedIn && playersRanking.length > 0 ? playersRanking : DEFAULT_ELEMENTS;
+
+	useEffect(() => {
+		if (gameEnded) {
+			if (currentRoundWinnings.length > 0) {
+				const currentRanking = currentRoundWinnings.map((p) => {
+					return { name: p.name, score: p.points };
+				});
+				if (playersRanking.length === 0) {
+					setPlayersRanking(currentRanking.toSorted((a, b) => b.score - a.score));
+				} else {
+					const totalRanking = currentRanking.reduce((a: RankingType[], c) => {
+						const samePlayer = playersRanking.filter((p) => c.name === p.name);
+						return [...a, { name: samePlayer[0].name, score: samePlayer[0].score + c.score }];
+					}, []);
+
+					setPlayersRanking(totalRanking.toSorted((a, b) => b.score - a.score));
+				}
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [gameEnded, currentRoundWinnings]);
 
 	const rows = tableData.map((element, i) => (
 		<Table.Tr key={element.name + i}>

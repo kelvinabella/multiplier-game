@@ -1,9 +1,16 @@
 import React, { useMemo } from "react";
 import { Paper, TextInput, Button, Text } from "@mantine/core";
 import { useGameContext } from "@/context";
+import { useLocalStorage } from "@mantine/hooks";
+import { RankingType } from "@/components/Ranking";
 
 export default function Welcome() {
-	const { player, playersRanking, setPlayer, setIsLoggedIn, setPlayersRanking } = useGameContext();
+	const { player, setPlayer, setIsLoggedIn } = useGameContext();
+
+	const [playersRanking, setPlayersRanking] = useLocalStorage<Array<RankingType>>({
+		key: "players-ranking",
+		defaultValue: [],
+	});
 
 	const nameValidate = useMemo(() => {
 		return player.name ? player.name?.length < 3 : true;

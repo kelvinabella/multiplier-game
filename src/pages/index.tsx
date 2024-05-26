@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Container, Grid, SimpleGrid } from "@mantine/core";
 import Stats from "@/components/Stats";
-import Ranking from "@/components/Ranking";
+import Ranking, { RankingType } from "@/components/Ranking";
 import Chat from "@/components/Chat";
 import ButtonInputs from "@/components/ButtonInputs";
 import CurrentRoundStats from "@/components/CurrentRoundStats";
@@ -10,14 +10,20 @@ import Welcome from "@/components/Welcome";
 import { useGameContext } from "@/context";
 import io, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
-import GameBoard from "@/components/GameBoard";
+import { useLocalStorage } from "@mantine/hooks";
+import Chart, { ChartPlacholder } from "@/components/Chart";
 
 export default function Index() {
-	const { isLoggedIn, gameStarted, player, playersRanking, setGameStarted, setGameEnded, setPlayersData } = useGameContext();
+	const { isLoggedIn, gameStarted,multiplierValue, player, setGameStarted, setGameEnded, setPlayersData } = useGameContext();
 
 	let socket = useRef<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
 
 	const [chatMessages, setChatMessages] = useState<Array<{ player: string; message: string }>>([]);
+
+	const [playersRanking] = useLocalStorage<Array<RankingType>>({
+		key: "players-ranking",
+		defaultValue: [],
+	});
 
 	const socketInitializer = async () => {
 		await fetch("/api/socket");
@@ -72,6 +78,7 @@ export default function Index() {
 									gameStarted
 										? undefined
 										: async () => {
+											multiplierValue.current = 0
 												setGameStarted(true);
 												setGameEnded(false);
 												setSocketListeners();
@@ -101,7 +108,7 @@ export default function Index() {
 								<Stats label={isLoggedIn ? "21:30" : ""} icon="/clock.png" />
 							</SimpleGrid>
 						</Grid.Col>
-						<GameBoard />
+						<Grid.Col pos="relative">{gameStarted ? <Chart /> : <ChartPlacholder />}</Grid.Col>
 					</Grid>
 				</Grid.Col>
 				<Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
